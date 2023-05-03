@@ -1,0 +1,18 @@
+name: 'Deploy to Replit'
+description: 'Deploy your GitHub repo to Replit Deployments'
+inputs:
+  replId:
+    description: 'The repl ID that this repo is linked to'
+    required: true
+  token:
+    description: 'Your connect.sid token - this is only needed to pull the latest commit and deploy the Repl'
+    required: true
+  subdomain:
+    description: 'The replit.app subdomain that your Repl will be hosted on.'
+    required: false
+outputs:
+  deploymentId:
+    description: 'The ID of the deployment'
+runs:
+  using: 'node18'
+  main: 'index.js'
