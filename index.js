@@ -51,6 +51,8 @@ const GraphQL = ({ query, variables, token }) =>
       token
     });
 
+    core.info(repl)
+
     if (repl.hostingDeployment.__typename !== "HostingDeployment") {
       // No deployment has been created, so we choose a plan (Pro / 20 cycles per day)
       const { setHostingTier } = await GraphQL({
@@ -85,7 +87,9 @@ const GraphQL = ({ query, variables, token }) =>
         },
         token
       })
-      if (setHostingTier.__typename !== "SetHostingTierResult") throw new Error("Could not subscribe to the Pro deployment plan. Please manually set a deployment tier in the Replit IDE and run this workflow again.")
+      if (setHostingTier.__typename !== "SetHostingTierResult") throw new Error("Could not subscribe to the Micro deployment plan. Please manually set a deployment tier in the Replit IDE and run this workflow again.")
+
+      core.info(setHostingTier)
     }
 
     crosis = new Client({
@@ -115,7 +119,7 @@ const GraphQL = ({ query, variables, token }) =>
           targetDeploymentId: repl.hostingDeployment?.id,
           subdomain: core.getInput('subdomain'),
           commands: {
-            build: core.getInput('buildCommand'),
+            build: core.getInput('buildCommand') ?? null,
             run: core.getInput('runCommand')
           }
         }
