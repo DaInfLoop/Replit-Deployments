@@ -10,8 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@actions/core": "^1.10.0",
     "@types/node": "^18.0.6",
     "crosis4furrets": "^1.2.2",
     "node-fetch": "^3.2.6"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.36.1"
   }
 }
