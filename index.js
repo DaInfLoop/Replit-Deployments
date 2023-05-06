@@ -24,6 +24,7 @@ const GraphQL = ({ query, variables, token }) =>
   })
 
 (async () => {
+  let crosis;
   try {
     const replId = core.getInput('replId');
     const token = encodeURIComponent(decodeURIComponent(core.getInput('token')));
@@ -87,8 +88,42 @@ const GraphQL = ({ query, variables, token }) =>
       if (setHostingTier.__typename !== "SetHostingTierResult") throw new Error("Could not subscribe to the Pro deployment plan. Please manually set a deployment tier in the Replit IDE and run this workflow again.")
     }
 
-    
+    crosis = new Client({
+      replId,
+      token
+    })
+
+    await crosis.connect();
+    await crosis.persist();
+    await crosis.shellExec("git pull", 10_000)
+    await crosis.close();
+
+    await GraphQL({
+      query: `mutation DeployRepl($input: DeployHostingBuild2Input!) {
+  deployHostingBuild2(input: $input) {
+    ...on DeployHostingBuild2Result {
+      __typename
+      targetDeployment {
+        replitAppSubdomain
+      }
+    }
+  }
+}`,
+      variables: {
+        input: {
+          replId,
+          targetDeploymentId: repl.hostingDeployment?.id,
+          subdomain: core.getInput('subdomain'),
+          commands: {
+            build: core.getInput('buildCommand'),
+            run: core.getInput('runCommand')
+          }
+        }
+      },
+      token
+    })
   } catch (error) {
+    if (crosis) await crosis.close();
     core.setFailed(error.message);
   }
 })();

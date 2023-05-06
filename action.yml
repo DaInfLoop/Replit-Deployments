@@ -9,7 +9,13 @@ inputs:
     required: true
   subdomain:
     description: 'The replit.app subdomain that your Repl will be hosted on.'
+    required: true
+  buildCommand:
+    description: "The build command for your deployment to run."
     required: false
+  runCommand: 
+    description: "The command your deployment will run when it starts."
+    required: true
 outputs:
   deploymentId:
     description: 'The ID of the deployment'
