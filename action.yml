@@ -20,7 +20,7 @@ outputs:
   deploymentId:
     description: 'The ID of the deployment'
 runs:
-  using: 'node18'
+  using: 'node16'
   main: 'index.js'
 branding:
   icon: 'upload-cloud'
